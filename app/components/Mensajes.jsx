@@ -1,6 +1,6 @@
 'use client';
 
-/** Bloque de error reutilizable, con opción de reintentar. */
+/* Mensaje para muestra de error */
 export function MensajeError({ mensaje, onReintentar }) {
   if (!mensaje) return null;
   return (
@@ -32,7 +32,7 @@ export function MensajeExito({ mensaje }) {
   );
 }
 
-/** Estado vacío para listas sin resultados. */
+/* Validación de listados sin registros */
 export function SinResultados({ titulo = 'Sin resultados', descripcion, accion }) {
   return (
     <div className="rounded-xl border border-dashed border-slate-300 bg-white py-14 text-center">
@@ -46,7 +46,7 @@ export function SinResultados({ titulo = 'Sin resultados', descripcion, accion }
   );
 }
 
-/** Error de validación debajo de un campo del formulario. */
+/* Validación de error en un campo de texto*/
 export function ErrorCampo({ mensaje }) {
   if (!mensaje) return null;
   return <p className="mt-1 text-xs font-medium text-red-600">{mensaje}</p>;

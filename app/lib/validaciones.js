@@ -3,7 +3,7 @@
  * Tener una sola fuente evita que la pantalla acepte algo que el API rechaza.
  */
 
-import { ESTADOS_VEHICULO } from './db';
+import { ESTADOS_VEHICULO } from './constantes';
 
 const ANIO_ACTUAL = new Date().getFullYear();
 

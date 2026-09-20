@@ -12,7 +12,7 @@ export default function Cargando({ mensaje = 'Cargando…' }) {
   );
 }
 
-/** Filas "esqueleto" para tablas mientras llegan los datos. */
+/* Carga de filas para tablas mientras llegan los datos */
 export function FilasEsqueleto({ filas = 5, columnas = 6 }) {
   return (
     <>

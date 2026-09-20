@@ -1,6 +1,6 @@
 'use client';
 
-/** Manejo global de errores de renderizado (Paso 5). */
+/* Función para manejo de errores */
 
 export default function ErrorGlobal({ error, reset }) {
   return (

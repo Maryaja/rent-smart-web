@@ -1,6 +1,6 @@
 'use client';
 
-/** Tarjeta de indicador (KPI) para los dashboards. */
+/* Función de tarjeta KPI */
 export function TarjetaKpi({ titulo, valor, detalle, icono, color = 'azul' }) {
   const fondos = {
     azul: 'bg-blue-50 text-blue-700',
@@ -28,7 +28,7 @@ export function TarjetaKpi({ titulo, valor, detalle, icono, color = 'azul' }) {
   );
 }
 
-/** Contenedor de sección con título. */
+/* Contenedor del titulo */
 export function Panel({ titulo, descripcion, acciones, children, className = '' }) {
   return (
     <section className={`rounded-xl border border-slate-200 bg-white shadow-sm ${className}`}>
@@ -46,7 +46,7 @@ export function Panel({ titulo, descripcion, acciones, children, className = '' 
   );
 }
 
-/** Barra horizontal simple para comparar valores sin librerías de gráficos. */
+/* Gráfico de barras */
 export function BarraComparativa({ etiqueta, valor, maximo, textoValor, color = 'bg-blue-500' }) {
   const porcentaje = maximo > 0 ? Math.min(100, (valor / maximo) * 100) : 0;
   return (
