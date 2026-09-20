@@ -67,15 +67,11 @@ function GestionVehiculos() {
     }
   }, []);
 
-  // Carga inicial de datos desde el API. La regla del compilador de React
-  // desaconseja invocar setState dentro de un efecto; aquí es intencional
-  // porque es el punto donde la pantalla se sincroniza con el servidor.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     cargar();
   }, [cargar]);
 
-  // Mensaje de éxito efímero
   useEffect(() => {
     if (!exito) return undefined;
     const t = setTimeout(() => setExito(null), 4000);
@@ -151,12 +147,38 @@ function GestionVehiculos() {
 
     setGuardando(true);
     try {
+      const formData = new FormData();
+      Object.entries(formulario).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value);
+        }
+      });
+
+      const inputFile = document.getElementById('imagen');
+      if (inputFile && inputFile.files[0]) {
+        formData.append('imagen', inputFile.files[0]);
+      }
+
       if (formulario.id) {
-        const actualizado = await VehiculoService.actualizarVehiculo(formulario.id, formulario);
+        const res = await fetch(`/api/vehiculos/${formulario.id}`, {
+          method: 'PUT',
+          body: formData,
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje || 'Error al actualizar');
+        
+        const actualizado = data.data;
         setVehiculos((lista) => lista.map((v) => (v.id === actualizado.id ? actualizado : v)));
         setExito(`Vehículo ${actualizado.marca} ${actualizado.modelo} actualizado correctamente.`);
       } else {
-        const creado = await VehiculoService.crearVehiculo(formulario);
+        const res = await fetch('/api/vehiculos', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.mensaje || 'Error al registrar');
+
+        const creado = data.data;
         setVehiculos((lista) => [...lista, creado].sort((a, b) => a.marca.localeCompare(b.marca)));
         setExito(`Vehículo ${creado.marca} ${creado.modelo} registrado correctamente.`);
       }
@@ -623,6 +645,20 @@ function GestionVehiculos() {
                     onChange={cambiarCampo}
                     className={claseInput('descripcion')}
                     placeholder="Detalles que el cliente verá en la ficha del vehículo."
+                  />
+                </div>
+
+                {/* Campo para cargar la foto del vehículo */}
+                <div className="sm:col-span-2">
+                  <label htmlFor="imagen" className="block text-sm font-medium text-slate-700">
+                    Foto del vehículo
+                  </label>
+                  <input
+                    id="imagen"
+                    name="imagen"
+                    type="file"
+                    accept="image/*"
+                    className="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
                 </div>
               </div>

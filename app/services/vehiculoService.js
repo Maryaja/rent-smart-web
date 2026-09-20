@@ -17,12 +17,20 @@ export const VehiculoService = {
     return apiClient.get('/vehiculos/disponibles', { params: filtros });
   },
 
-  crearVehiculo(vehiculo) {
-    return apiClient.post('/vehiculos', vehiculo, { silencioso: true });
+  crearVehiculo(vehiculoData) {
+    const esFormData = vehiculoData instanceof FormData;
+    return apiClient.post('/vehiculos', vehiculoData, { 
+      silencioso: true,
+      ...(esFormData && { headers: {} })
+    });
   },
 
-  actualizarVehiculo(id, vehiculo) {
-    return apiClient.put(`/vehiculos/${id}`, vehiculo, { silencioso: true });
+  actualizarVehiculo(id, vehiculoData) {
+    const esFormData = vehiculoData instanceof FormData;
+    return apiClient.put(`/vehiculos/${id}`, vehiculoData, { 
+      silencioso: true,
+      ...(esFormData && { headers: {} })
+    });
   },
 
   eliminarVehiculo(id) {

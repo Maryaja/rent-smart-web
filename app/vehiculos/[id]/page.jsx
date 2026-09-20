@@ -45,9 +45,6 @@ function DetalleVehiculo() {
     }
   }, [id]);
 
-  // Carga inicial de datos desde el API. La regla del compilador de React
-  // desaconseja invocar setState dentro de un efecto; aquí es intencional
-  // porque es el punto donde la pantalla se sincroniza con el servidor.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     cargar();
@@ -66,9 +63,9 @@ function DetalleVehiculo() {
     [vehiculo, fechas]
   );
 
-  /** Choque local con las reservas activas mostradas, antes de llamar al API. */
+  /** Choque local con las reservas activas (con validación segura por si es undefined) */
   const choque = useMemo(() => {
-    if (!vehiculo || !cotizacion) return null;
+    if (!vehiculo || !cotizacion || !Array.isArray(vehiculo.reservasActivas)) return null;
     return (
       vehiculo.reservasActivas.find(
         (r) => fechas.fechaInicio < r.fechaFin && r.fechaInicio < fechas.fechaFin
@@ -129,6 +126,7 @@ function DetalleVehiculo() {
   ];
 
   const puedeReservar = vehiculo.estado === 'disponible';
+  const reservasActivas = Array.isArray(vehiculo.reservasActivas) ? vehiculo.reservasActivas : [];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
@@ -145,9 +143,19 @@ function DetalleVehiculo() {
         {/* ------------------------- Información ------------------------- */}
         <div className="space-y-6 lg:col-span-2">
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid h-56 place-items-center bg-gradient-to-br from-slate-100 to-slate-200 text-7xl">
-              🚗
+            {/* Imagen real del vehículo o icono por defecto */}
+            <div className="relative h-56 w-full bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden flex items-center justify-center">
+              {vehiculo.imagenUrl ? (
+                <img 
+                  src={vehiculo.imagenUrl} 
+                  alt={`${vehiculo.marca} ${vehiculo.modelo}`} 
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-7xl">🚗</span>
+              )}
             </div>
+
             <div className="p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -187,13 +195,13 @@ function DetalleVehiculo() {
             titulo="Calendario de ocupación"
             descripcion="Reservas activas que bloquean este vehículo."
           >
-            {vehiculo.reservasActivas.length === 0 ? (
+            {reservasActivas.length === 0 ? (
               <p className="text-sm text-slate-500">
                 No hay reservas activas: el vehículo está libre en todo el calendario.
               </p>
             ) : (
               <ul className="divide-y divide-slate-200">
-                {vehiculo.reservasActivas.map((r) => (
+                {reservasActivas.map((r) => (
                   <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                     <div>
                       <p className="font-mono text-sm font-medium text-slate-900">{r.codigo}</p>
