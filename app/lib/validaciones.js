@@ -1,6 +1,5 @@
 /**
  * Validaciones compartidas entre el formulario (cliente) y el API (servidor).
- * Tener una sola fuente evita que la pantalla acepte algo que el API rechaza.
  */
 
 import { ESTADOS_VEHICULO } from './db';
