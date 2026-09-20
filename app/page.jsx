@@ -1,4 +1,9 @@
-/* Página prueba del proyecto*/
+'use client';
+
+/* Portada pública */
+
+import Link from 'next/link';
+import { useAuth, rutaInicioPorRol } from '@/app/context/AuthContext';
 
 const CARACTERISTICAS = [
   {
@@ -24,6 +29,8 @@ const CARACTERISTICAS = [
 ];
 
 export default function Inicio() {
+  const { autenticado, rol, usuario } = useAuth();
+
   return (
     <div className="flex flex-1 flex-col">
       <section className="border-b border-slate-200 bg-white">
@@ -35,11 +42,40 @@ export default function Inicio() {
             RENT <span className="text-blue-600">SMART</span>
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            Gestiona tu flota, tus reservas y tus contratos desde un solo sistema.
+            Gestiona tu flota, tus reservas y tus contratos desde un solo sistema. Para el equipo de
+            operaciones y para tus clientes.
           </p>
-          <p className="mt-8 inline-block rounded-lg bg-slate-100 px-5 py-3 text-sm text-slate-600">
-            Rama base: configuración, base de datos MySQL y componentes compartidos.
-          </p>
+
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            {autenticado ? (
+              <>
+                <Link
+                  href={rutaInicioPorRol(rol)}
+                  className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+                >
+                  Ir a mi panel
+                </Link>
+                <span className="text-sm text-slate-500">
+                  Sesión activa: {usuario.nombre} ({rol})
+                </span>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  href="/registro"
+                  className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Registrarme como cliente
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </section>
 
@@ -55,6 +91,26 @@ export default function Inicio() {
             </article>
           ))}
         </div>
+
+        {!autenticado && (
+          <div className="mt-12 rounded-xl border border-blue-200 bg-blue-50 p-6">
+            <h2 className="text-sm font-semibold text-blue-900">Cuentas de demostración</h2>
+            <ul className="mt-3 grid gap-2 text-sm text-blue-900 sm:grid-cols-3">
+              <li className="rounded-lg bg-white/70 px-4 py-3">
+                <strong className="block">Administrador</strong>
+                admin@rentsmart.com / Admin123
+              </li>
+              <li className="rounded-lg bg-white/70 px-4 py-3">
+                <strong className="block">Operador</strong>
+                operador@rentsmart.com / Operador123
+              </li>
+              <li className="rounded-lg bg-white/70 px-4 py-3">
+                <strong className="block">Cliente</strong>
+                cliente@rentsmart.com / Cliente123
+              </li>
+            </ul>
+          </div>
+        )}
       </section>
     </div>
   );

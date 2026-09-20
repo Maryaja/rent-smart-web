@@ -1,10 +1,3 @@
-/**
- * Helpers para que todos los Route Handlers respondan con el mismo formato.
- *
- *   Éxito  -> { ok: true,  data: ... }
- *   Error  -> { ok: false, mensaje: '...', errores?: { campo: 'motivo' } }
- */
-
 export function ok(data, status = 200) {
   return Response.json({ ok: true, data }, { status });
 }
@@ -25,7 +18,7 @@ export function invalido(errores, mensaje = 'Hay campos con errores de validaci�
   return error(mensaje, 422, errores);
 }
 
-/** Lee el JSON del request sin reventar si viene vacío o malformado. */
+/* Lee el JSON del request sin reventar si viene vacío o malformado. */
 export async function leerJson(request) {
   try {
     return await request.json();
@@ -34,7 +27,7 @@ export async function leerJson(request) {
   }
 }
 
-/** Envuelve un handler para convertir cualquier excepción en un 500 con formato. */
+/* Envuelve un handler para convertir cualquier excepción en un 500 con formato. */
 export function manejar(handler) {
   return async (request, contexto) => {
     try {
@@ -46,7 +39,7 @@ export function manejar(handler) {
   };
 }
 
-/** Convierte el id de la URL (string) a número validado. */
+/* Convierte el id de la URL (string) a número validado. */
 export function idNumerico(valor) {
   const id = Number(valor);
   return Number.isInteger(id) && id > 0 ? id : null;

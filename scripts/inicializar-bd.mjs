@@ -1,4 +1,4 @@
-/**
+/*
  * Script para crear la base de datos de RENT SMART y la llena con datos de ejemplo.
  * npm run db:init          -> esquema + datos de ejemplo
  * npm run db:init -- --solo-esquema

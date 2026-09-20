@@ -1,4 +1,4 @@
-/**
+/*
  * RENT SMART · Conexión a MySQL.
  *
  * Un único pool de conexiones para toda la aplicación. Se guarda en
@@ -36,7 +36,7 @@ export function obtenerPool() {
   return globalThis.__RENT_SMART_POOL__;
 }
 
-/**
+/*
  * Ejecuta una consulta con parámetros y devuelve las filas.
  * Siempre con `?` — nunca concatenando valores — para evitar inyección SQL.
  */
@@ -51,7 +51,7 @@ export async function consultarUna(sql, parametros = []) {
   return filas.length > 0 ? filas[0] : null;
 }
 
-/**
+/*
  * Ejecuta INSERT / UPDATE / DELETE.
  * Devuelve { insertId, affectedRows }.
  */
@@ -60,7 +60,7 @@ export async function ejecutar(sql, parametros = []) {
   return resultado;
 }
 
-/**
+/*
  * Corre varias operaciones dentro de una transacción.
  * Si alguna falla, se revierte todo.
  *
@@ -84,6 +84,6 @@ export async function enTransaccion(trabajo) {
   }
 }
 
-/** Códigos de error de MySQL que conviene distinguir en el API. */
+/* Códigos de error de MySQL que conviene distinguir en el API. */
 export const ERROR_DUPLICADO = 'ER_DUP_ENTRY';
 export const ERROR_LLAVE_FORANEA = 'ER_ROW_IS_REFERENCED_2';

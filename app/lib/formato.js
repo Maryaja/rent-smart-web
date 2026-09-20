@@ -1,4 +1,4 @@
-/** Formateo compartido por todas las pantallas. */
+/* Formatos compartidos por todas las pantallas */
 
 const formateadorMoneda = new Intl.NumberFormat('es-SV', {
   style: 'currency',
