@@ -18,10 +18,13 @@ export const GET = manejar(async (request) => {
     precioMax: searchParams.get('precioMax') || undefined,
   };
 
-  const lista = vehiculosDisponibles(fechaInicio, fechaFin, filtros).map((vehiculo) => {
-    if (!fechaInicio || !fechaFin) return { ...vehiculo, cotizacion: null };
-    return { ...vehiculo, cotizacion: calcularTarifa(vehiculo.precioPorDia, fechaInicio, fechaFin) };
-  });
+  const libres = await vehiculosDisponibles(fechaInicio, fechaFin, filtros);
+
+  const lista = libres.map((vehiculo) =>
+    fechaInicio && fechaFin
+      ? { ...vehiculo, cotizacion: calcularTarifa(vehiculo.precioPorDia, fechaInicio, fechaFin) }
+      : { ...vehiculo, cotizacion: null }
+  );
 
   return ok(lista);
 });
