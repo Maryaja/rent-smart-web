@@ -1,26 +1,18 @@
-import { db } from '@/app/lib/db';
 import { ok, error, invalido, noEncontrado, leerJson, manejar, idNumerico } from '@/app/lib/http';
 import { validarVehiculo, hayErrores } from '@/app/lib/validaciones';
-import { ESTADOS_QUE_OCUPAN, expandirReserva } from '@/app/lib/negocio';
+import * as repoVehiculos from '@/app/lib/repositorios/vehiculos';
+import * as repoReservas from '@/app/lib/repositorios/reservas';
 
-function buscar(id) {
-  return db.vehiculos.find((v) => v.id === id);
-}
-
-/** GET /api/vehiculos/:id  -> vehículo + sus reservas activas (Pantalla 7) */
+/** GET /api/vehiculos/:id — vehículo + sus reservas activas (Pantalla 7) */
 export const GET = manejar(async (_request, { params }) => {
   const { id: crudo } = await params;
   const id = idNumerico(crudo);
   if (!id) return error('Identificador inválido.');
 
-  const vehiculo = buscar(id);
+  const vehiculo = await repoVehiculos.porId(id);
   if (!vehiculo) return noEncontrado('Vehículo');
 
-  const reservasActivas = db.reservas
-    .filter((r) => r.vehiculoId === id && ESTADOS_QUE_OCUPAN.includes(r.estado))
-    .map(expandirReserva)
-    .sort((a, b) => a.fechaInicio.localeCompare(b.fechaInicio));
-
+  const reservasActivas = await repoReservas.activasDeVehiculo(id);
   return ok({ ...vehiculo, reservasActivas });
 });
 
@@ -30,7 +22,7 @@ export const PUT = manejar(async (request, { params }) => {
   const id = idNumerico(crudo);
   if (!id) return error('Identificador inválido.');
 
-  const vehiculo = buscar(id);
+  const vehiculo = await repoVehiculos.porId(id);
   if (!vehiculo) return noEncontrado('Vehículo');
 
   const body = await leerJson(request);
@@ -40,15 +32,13 @@ export const PUT = manejar(async (request, { params }) => {
   if (hayErrores(errores)) return invalido(errores);
 
   const placa = String(body.placa ?? vehiculo.placa).trim().toUpperCase();
-  if (db.vehiculos.some((v) => v.placa === placa && v.id !== id))
+  if (await repoVehiculos.existePlaca(placa, id))
     return invalido({ placa: 'Otro vehículo ya usa esta placa.' });
 
   // Si se saca de circulación, no puede tener reservas activas.
   const nuevoEstado = body.estado ?? vehiculo.estado;
   if (nuevoEstado !== 'disponible' && vehiculo.estado === 'disponible') {
-    const conflicto = db.reservas.find(
-      (r) => r.vehiculoId === id && ESTADOS_QUE_OCUPAN.includes(r.estado)
-    );
+    const conflicto = await repoReservas.primeraActivaDeVehiculo(id);
     if (conflicto)
       return invalido(
         { estado: `No se puede cambiar el estado: la reserva ${conflicto.codigo} sigue activa.` },
@@ -56,7 +46,7 @@ export const PUT = manejar(async (request, { params }) => {
       );
   }
 
-  Object.assign(vehiculo, {
+  const actualizado = await repoVehiculos.actualizar(id, {
     marca: String(body.marca ?? vehiculo.marca).trim(),
     modelo: String(body.modelo ?? vehiculo.modelo).trim(),
     anio: Number(body.anio ?? vehiculo.anio),
@@ -73,7 +63,7 @@ export const PUT = manejar(async (request, { params }) => {
     descripcion: String(body.descripcion ?? vehiculo.descripcion ?? '').trim(),
   });
 
-  return ok(vehiculo);
+  return ok(actualizado);
 });
 
 /** DELETE /api/vehiculos/:id */
@@ -82,18 +72,27 @@ export const DELETE = manejar(async (_request, { params }) => {
   const id = idNumerico(crudo);
   if (!id) return error('Identificador inválido.');
 
-  const indice = db.vehiculos.findIndex((v) => v.id === id);
-  if (indice === -1) return noEncontrado('Vehículo');
+  const vehiculo = await repoVehiculos.porId(id);
+  if (!vehiculo) return noEncontrado('Vehículo');
 
-  const conflicto = db.reservas.find(
-    (r) => r.vehiculoId === id && ESTADOS_QUE_OCUPAN.includes(r.estado)
-  );
+  const conflicto = await repoReservas.primeraActivaDeVehiculo(id);
   if (conflicto)
     return error(
       `No se puede eliminar: el vehículo tiene la reserva ${conflicto.codigo} activa. Cámbialo a "no disponible" en su lugar.`,
       409
     );
 
-  const [eliminado] = db.vehiculos.splice(indice, 1);
-  return ok({ eliminado: true, vehiculo: eliminado });
+  // La llave foránea impide borrar un vehículo con historial de reservas.
+  try {
+    await repoVehiculos.eliminar(id);
+  } catch (e) {
+    if (e.code === 'ER_ROW_IS_REFERENCED_2' || e.errno === 1451)
+      return error(
+        'No se puede eliminar: el vehículo tiene reservas registradas en su historial. Cámbialo a "no disponible".',
+        409
+      );
+    throw e;
+  }
+
+  return ok({ eliminado: true, vehiculo });
 });

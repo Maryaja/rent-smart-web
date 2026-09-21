@@ -30,14 +30,15 @@ INSERT INTO usuarios (id, nombre, email, password, rol, telefono, activo, client
 
 -- Vehículos ----------------------------------------------------------
 INSERT INTO vehiculos (id, marca, modelo, anio, placa, categoria, color, transmision, combustible, capacidad, kilometraje, precio_por_dia, estado, imagen_url, descripcion) VALUES
-  (1, 'Toyota', 'Corolla', 2023, 'P123456', 'Sedán', 'Blanco', 'Automática', 'Gasolina', 5, 24500, 38, 'disponible', '', 'Sedán económico, ideal para ciudad y viajes cortos.'),
-  (2, 'Nissan', 'Versa', 2022, 'P234567', 'Sedán', 'Gris', 'Automática', 'Gasolina', 5, 41200, 33, 'disponible', '', 'Bajo consumo de combustible y amplio maletero.'),
-  (3, 'Kia', 'Sportage', 2024, 'P345678', 'SUV', 'Negro', 'Automática', 'Gasolina', 5, 12800, 58, 'disponible', '', 'SUV compacta con cámara de retroceso y sensores.'),
-  (4, 'Toyota', 'Hilux', 2023, 'P456789', 'Pick-up', 'Plata', 'Manual', 'Diésel', 5, 56300, 72, 'disponible', '', 'Doble cabina 4x4, recomendada para zonas rurales.'),
-  (5, 'Hyundai', 'Accent', 2021, 'P567890', 'Compacto', 'Rojo', 'Manual', 'Gasolina', 5, 78900, 28, 'mantenimiento', '', 'En taller por servicio preventivo de 80,000 km.'),
-  (6, 'Honda', 'CR-V', 2024, 'P678901', 'SUV', 'Azul', 'Automática', 'Híbrido', 5, 9400, 65, 'disponible', '', 'SUV híbrida, excelente rendimiento en carretera.'),
-  (7, 'Suzuki', 'Swift', 2022, 'P789012', 'Compacto', 'Blanco', 'Automática', 'Gasolina', 5, 33100, 30, 'disponible', '', 'Compacto ágil y fácil de estacionar.'),
-  (8, 'Toyota', 'Hiace', 2020, 'P890123', 'Microbús', 'Blanco', 'Manual', 'Diésel', 15, 132400, 95, 'no_disponible', '', 'Retirado temporalmente de la flota por revisión mecánica.');
+  (1, 'Toyota', 'Corolla', 2023, 'P123456', 'Sedán', 'Blanco', 'Automática', 'Gasolina', 5, 24500, 38, 'disponible', '/uploads/1789939233917-71944284-Corolla_Blanco.jpeg', 'Sedán económico, ideal para ciudad y viajes cortos.'),
+  (2, 'Nissan', 'Versa', 2022, 'P234567', 'Sedán', 'Gris', 'Automática', 'Gasolina', 5, 41200, 33, 'disponible', '/uploads/1789939097753-686555555-Nissan_Versa_Gris.jpeg', 'Bajo consumo de combustible y amplio maletero.'),
+  (3, 'Kia', 'Sportage', 2024, 'P345678', 'SUV', 'Negro', 'Automática', 'Gasolina', 5, 12800, 58, 'disponible', '/uploads/1789938905658-730372856-Kia_Sportage_Negro.jpeg', 'SUV compacta con cámara de retroceso y sensores.'),
+  (4, 'Toyota', 'Hilux', 2023, 'P456789', 'Pick-up', 'Plata', 'Manual', 'Diésel', 5, 56300, 72, 'disponible', '/uploads/1789939256569-720737083-Hilux_Plata.jpeg', 'Doble cabina 4x4, recomendada para zonas rurales.'),
+  (5, 'Hyundai', 'Accent', 2021, 'P567890', 'Compacto', 'Rojo', 'Manual', 'Gasolina', 5, 78900, 28, 'mantenimiento', '/uploads/1789938883863-493779656-Hyundai_Rojo.jpeg', 'En taller por servicio preventivo de 80,000 km.'),
+  (6, 'Honda', 'CR-V', 2024, 'P678901', 'SUV', 'Azul', 'Automática', 'Híbrido', 5, 9400, 65, 'disponible', '/uploads/1789938866726-318535118-Honda_Azul.jpeg', 'SUV híbrida, excelente rendimiento en carretera.'),
+  (7, 'Suzuki', 'Swift', 2022, 'P789012', 'Compacto', 'Blanco', 'Automática', 'Gasolina', 5, 33100, 30, 'disponible', '/uploads/1789939193446-851037836-Suzuki_Swift_Blanci.jpeg', 'Compacto ágil y fácil de estacionar.'),
+  (8, 'Toyota', 'Hiace', 2020, 'P890123', 'Microbús', 'Blanco', 'Manual', 'Diésel', 15, 132400, 95, 'no_disponible', '/uploads/1789939247595-443561760-Hiace_Blanco.jpeg', 'Retirado temporalmente de la flota por revisión mecánica.');
+
 
 -- Reservas -----------------------------------------------------------
 INSERT INTO reservas (id, codigo, vehiculo_id, cliente_id, fecha_inicio, fecha_fin, dias, tarifa_diaria, porcentaje_descuento, descuento, subtotal, impuesto, total, estado, lugar_entrega, observaciones, fecha_creacion) VALUES
