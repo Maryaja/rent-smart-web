@@ -1,15 +1,25 @@
 'use client';
 
-/* Barra de navegacion, los enlaces cambian según el rol */
+/** Barra de navegación: los enlaces cambian según el rol activo. */
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
 
-const ENLACES_PERSONAL = [];
+const ENLACES_PERSONAL = [
+  { href: '/admin', texto: 'Dashboard' },
+  { href: '/vehiculos', texto: 'Vehículos' },
+  { href: '/reservas', texto: 'Reservas' },
+  { href: '/contratos', texto: 'Contratos' },
+  { href: '/reportes', texto: 'Reportes' },
+];
 
-const ENLACES_CLIENTE = [];
+const ENLACES_CLIENTE = [
+  { href: '/cliente', texto: 'Mi panel' },
+  { href: '/buscar', texto: 'Buscar vehículo' },
+  { href: '/mis-reservas', texto: 'Mis reservas' },
+];
 
 export default function Navbar() {
   const { autenticado, usuario, rol, esPersonal, cerrarSesion, cargando } = useAuth();

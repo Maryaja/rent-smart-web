@@ -1,9 +1,11 @@
 'use client';
 
-/*
- * Función para verificar el usuario autenticado y rol activo
- * Implementado con Context API + useReducer, sin dependencias externas
- * La sesión se persiste en localStorage para que al recargar la página el usuario siga con la sesión activa
+/**
+ * Estado global de la aplicación (Paso 1): usuario autenticado y rol activo.
+ * Implementado con Context API + useReducer, sin dependencias externas.
+ *
+ * La sesión se persiste en localStorage para que al recargar la página
+ * el usuario siga dentro.
  */
 
 import { createContext, useContext, useEffect, useMemo, useReducer, useCallback } from 'react';
@@ -48,7 +50,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [estado, dispatch] = useReducer(reducer, estadoInicial);
 
-  // Restaurar la sesión
+  // Restaurar sesión al montar
   useEffect(() => {
     try {
       const crudo = window.localStorage.getItem(CLAVE_SESION);
@@ -140,7 +142,9 @@ export function useAuth() {
   return contexto;
 }
 
-/* Ruta de inicio según el rol: administrador/operador → panel | cliente → su portal. */
+/** Ruta de inicio según el rol: administrador/operador → panel; cliente → su portal. */
 export function rutaInicioPorRol(rol) {
-  return rol ? '/' : '/login';
+  if (rol === 'administrador' || rol === 'operador') return '/admin';
+  if (rol === 'cliente') return '/cliente';
+  return '/login';
 }
