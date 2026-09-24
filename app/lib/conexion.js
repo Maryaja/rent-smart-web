@@ -12,10 +12,10 @@ import mysql from 'mysql2/promise';
 
 function crearPool() {
   return mysql.createPool({
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: Number(process.env.DB_PORT || 3306),
+    host: process.env.DB_HOST || 'iriguchi.proxy.rlwy.net',
+    port: Number(process.env.DB_PORT || 38365),
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
+    password: process.env.DB_PASSWORD || 'nkFUmZcWroWYOmEmAGtcoOaihQoFlXIc',
     database: process.env.DB_NAME || 'rent_smart',
     waitForConnections: true,
     connectionLimit: Number(process.env.DB_POOL || 10),
