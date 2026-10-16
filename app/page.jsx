@@ -91,26 +91,6 @@ export default function Inicio() {
             </article>
           ))}
         </div>
-
-        {!autenticado && (
-          <div className="mt-12 rounded-xl border border-blue-200 bg-blue-50 p-6">
-            <h2 className="text-sm font-semibold text-blue-900">Cuentas de demostración</h2>
-            <ul className="mt-3 grid gap-2 text-sm text-blue-900 sm:grid-cols-3">
-              <li className="rounded-lg bg-white/70 px-4 py-3">
-                <strong className="block">Administrador</strong>
-                admin@rentsmart.com / Admin123
-              </li>
-              <li className="rounded-lg bg-white/70 px-4 py-3">
-                <strong className="block">Operador</strong>
-                operador@rentsmart.com / Operador123
-              </li>
-              <li className="rounded-lg bg-white/70 px-4 py-3">
-                <strong className="block">Cliente</strong>
-                cliente@rentsmart.com / Cliente123
-              </li>
-            </ul>
-          </div>
-        )}
       </section>
     </div>
   );

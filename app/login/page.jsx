@@ -161,25 +161,7 @@ function FormularioLogin() {
             </Link>
           </p>
         </div>
-
-        <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Cuentas de prueba
-          </p>
-          <div className="mt-3 grid gap-2">
-            {CUENTAS_DEMO.map((c) => (
-              <button
-                key={c.email}
-                type="button"
-                onClick={() => usarDemo(c)}
-                className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left text-sm transition hover:border-blue-300 hover:bg-blue-50"
-              >
-                <span className="font-medium text-slate-800">{c.rol}</span>
-                <span className="text-xs text-slate-500">{c.email}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+       
       </div>
     </div>
   );
