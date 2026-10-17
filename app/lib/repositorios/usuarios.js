@@ -1,4 +1,5 @@
 import { consultar, consultarUna, ejecutar } from '@/app/lib/conexion';
+import bcrypt from 'bcryptjs';
 
 const COLUMNAS = `
   id,
@@ -43,6 +44,7 @@ export async function existeEmail(email) {
 }
 
 export async function crear(usuario, conexion = null) {
+  const passwordHash = await bcrypt.hash(usuario.password, 12);
   const sql = `
     INSERT INTO usuarios (nombre, email, password, rol, telefono, activo, cliente_id, fecha_registro)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -50,7 +52,7 @@ export async function crear(usuario, conexion = null) {
   const valores = [
     usuario.nombre,
     usuario.email,
-    usuario.password,
+    passwordHash,
     usuario.rol,
     usuario.telefono || '',
     usuario.activo === false ? 0 : 1,
@@ -66,9 +68,14 @@ export async function crear(usuario, conexion = null) {
 }
 
 export async function cambiarPassword(email, password) {
+  const passwordHash = await bcrypt.hash(password, 12);
   const resultado = await ejecutar('UPDATE usuarios SET password = ? WHERE email = ?', [
-    password,
+    passwordHash,
     String(email).trim().toLowerCase(),
   ]);
   return resultado.affectedRows > 0;
+}
+
+export async function verificarPassword(passwordPlano, passwordHash) {
+  return bcrypt.compare(passwordPlano, passwordHash);
 }

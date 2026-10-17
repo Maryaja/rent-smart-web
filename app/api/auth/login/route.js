@@ -13,7 +13,8 @@ export const POST = manejar(async (request) => {
 
   const usuario = await repoUsuarios.porEmail(body.email);
 
-  if (!usuario || usuario.password !== body.password)
+  const passwordValida = await repoUsuarios.verificarPassword(body.password, usuario.password);
+  if (!usuario || !passwordValida)
     return error('Correo o contraseña incorrectos.', 401);
 
   if (!usuario.activo) return error('La cuenta está desactivada. Contacta al administrador.', 403);
